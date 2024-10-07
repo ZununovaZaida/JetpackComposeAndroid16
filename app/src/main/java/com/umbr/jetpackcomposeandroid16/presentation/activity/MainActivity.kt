@@ -8,35 +8,38 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.umbr.jetpackcomposeandroid16.presentation.screens.FirstScreen
+import androidx.lifecycle.ViewModelProvider
 import com.umbr.jetpackcomposeandroid16.presentation.screens.ScreensName
 import com.umbr.jetpackcomposeandroid16.presentation.screens.SecondScreen
+import com.umbr.jetpackcomposeandroid16.presentation.screens.coffee_list.CoffeeListScreen
+import com.umbr.jetpackcomposeandroid16.presentation.screens.coffee_list.CoffeeListViewModel
 
 class MainActivity : ComponentActivity() {
+
+    private val coffeeListViewModel by lazy {
+        ViewModelProvider(this)[CoffeeListViewModel::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
         setContent {
             var visibleScreen by remember {
-                mutableStateOf(ScreensName.FIRST_SCREEN)
+                mutableStateOf(ScreensName.COFFEE_LIST_SCREEN)
             }
 
             var nameForFirst by remember {
                 mutableStateOf("")
             }
             when (visibleScreen) {
-                ScreensName.FIRST_SCREEN -> {
-                    FirstScreen(nameForFirst) {
-                        visibleScreen = ScreensName.SECOND_SCREEN
-                    }
+                ScreensName.COFFEE_LIST_SCREEN -> {
+                    CoffeeListScreen(viewModel = coffeeListViewModel)
                 }
 
                 ScreensName.SECOND_SCREEN -> {
                     SecondScreen { name ->
                         nameForFirst = name
-                        visibleScreen = ScreensName.FIRST_SCREEN
+                        visibleScreen = ScreensName.COFFEE_LIST_SCREEN
                     }
                 }
             }
